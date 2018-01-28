@@ -68,13 +68,14 @@ class BinanceIndicators:
         return pd.DataFrame(output_data, columns=self.KLINE_HEADERS)
 
     def save_dataframe(self, df):
-        with open(("{}{}_{}_{}-{}.json".format(
+        with open("{}{}_{}_{}-{}.json".format(
                         indicator_dir,
                         self.symbol,
                         self.timeframe,
                         self.start_ts,
                         self.end_ts
-                ), 'w') as f: f.write(json.dumps(df))
+            ), 'w') as f: 
+            f.write(json.dumps(df))
 
     def get_emavg(self, data, *windows):
         for w in windows:
