@@ -1,16 +1,34 @@
 import sqlite3
-conn = sqlite3.connect('historical_data.db')
-c = conn.cursor()
+
+class Wrapper:
+
+  def __init__():
+    self.connection = sqlite3.connect('historical_data.db')
+    self.cursor = connection.cursor()
+
+  def save():
+    self.connection.commit()
+
+  def close():
+    self.connection.close()
+
+  def add_records(table_name, records, foreign_keys=None):
+    # look for records already matching these
+    if foreign_keys:
+      self.cursor.execute("SELECT id from ")
+    else:
+
+    print "foo is %s" % (bar, )
+
+    for record in records:
+
+
+
 
 # Create klines table
 c.execute('''CREATE TABLE klines
              (open_time INTEGER, open REAL, high REAL, low REAL, close REAL, volume REAL, close_time REAL, quote_asset_volume REAL, number_of_trades INTEGER, taker_buy_base_asset_volume REAL, taker_buy_quote_asset_volume REAL)''')
 
-# Save (commit) the changes
-conn.commit()
-
-# We can also close the connection if we are done with it.
-# Just be sure any changes have been committed or they will be lost.
 conn.close()
 
 def insert_test_data():
