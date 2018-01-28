@@ -1,19 +1,20 @@
 import time
-import dateparser
-import pytz
-import json, csv
+import json
+import os
 import pandas as pd
 
 from argparse import ArgumentParser
 from datetime import datetime
 from binance.client import Client
 from binance.helpers import date_to_milliseconds, interval_to_milliseconds
+from binance.trading_constants import ALL_ETH_PAIRS
 
 class BinanceIndicators:
     def __init__(self, symbol, limit, interval, start_str, end_str):
         self.client = Client("", "")
         self.symbol = symbol
         self.limit = limit
+        self.interval = interval
         self.timeframe = interval_to_milliseconds(interval)
         self.start_ts = date_to_milliseconds(start_str)
         self.end_ts = None
@@ -34,7 +35,7 @@ class BinanceIndicators:
             # fetch the klines from start_ts up to max 500 entries or the end_ts if set
             temp_data = self.client.get_klines(
                 symbol=self.symbol,
-                interval=Client.KLINE_INTERVAL_5MINUTE,
+                interval=self.interval,
                 limit=self.limit,
                 startTime=start_time,
                 endTime=end_time
@@ -68,7 +69,7 @@ class BinanceIndicators:
 
     def save_dataframe(self, df):
         with open(
-            "Binance_{}_{}_{}-{}.json".format(
+            "/indicator_data/{}_{}_{}-{}.json".format(
                 self.symbol,
                 self.timeframe,
                 self.start_ts,
@@ -78,13 +79,23 @@ class BinanceIndicators:
         ) as f:
             f.write(json.dumps(df))
 
-    def get_mavg(self, data, *windows):
+    def get_emavg(self, data, *windows):
         for w in windows:
-            data['mavg_' + str(w)] = data['open'].rolling(w).mean()
+            data['mavg_' + str(w)] = data['open'].ewm(span=w).mean()
         return data[['open_time'] + ['mavg_' + str(w) for w in windows]]
 
     def save_all_features(self, data):
-       data.to_csv('ayy.csv', sep=',', index=False)
+       current_directory = os.getcwd()
+       indicator_dir = current_directory.rstrip('/') + '/indicator_data/'
+       if not os.path.exists(indicator_dir):
+           os.makedirs(indicator_dir) 
+       data.to_csv("{}{}_{}_{}-{}.csv".format(
+                        indicator_dir,
+                        self.symbol,
+                        self.timeframe,
+                        self.start_ts,
+                        self.end_ts
+                ), sep=',', index=False)
 
 
 def make_parser():
@@ -98,16 +109,18 @@ def make_parser():
     parser.add_argument('-e', '--end', dest='end_str',
                         required=False, default='1 Jan, 2018')
     parser.add_argument('-i', '--interval', dest='interval',
-                        required=False, default='5m')
+                        required=False, default='30m')
 
     return parser
 
 def main(args):
 
     inds = BinanceIndicators(args.symbol, args.limit, args.interval, args.start_str, args.end_str)
-    data = inds.fetch_klines()
-    mavs = inds.get_mavg(data, 10, 20)
-    inds.save_all_features(mavs)
+    for symbol in ALL_ETH_PAIRS:
+        inds.symbol = symbol
+        data = inds.fetch_klines()
+        mavs = inds.get_emavg(data, 10, 50)
+        inds.save_all_features(mavs)
 
 if __name__ == '__main__':
     parser = make_parser()
