@@ -1,0 +1,17 @@
+ALL_ETH_PAIRS = ['ETHBTC', 'QTUMETH', 'EOSETH', 'SNTETH', 'BNTETH', 'BNBETH', 'ETHUSDT',
+                 'OAXETH', 'DNTETH', 'MCOETH', 'ICNETH', 'WTCETH', 'LRCETH', 'OMGETH',
+                 'ZRXETH', 'STRATETH', 'SNGLSETH', 'BQXETH', 'KNCETH', 'FUNETH', 'SNMETH',
+                 'NEOETH', 'IOTAETH', 'LINKETH', 'XVGETH', 'CTRETH', 'SALTETH', 'MDAETH',
+                 'MTLETH', 'SUBETH', 'ETCETH', 'MTHETH', 'ENGETH', 'ZECETH', 'ASTETH',
+                 'DASHETH', 'BTGETH', 'EVXETH', 'REQETH', 'VIBETH', 'HSRETH', 'TRXETH',
+                 'POWRETH', 'ARKETH', 'YOYOETH', 'XRPETH', 'MODETH', 'ENJETH', 'STORJETH',
+                 'VENETH', 'KMDETH', 'RCNETH', 'NULSETH', 'RDNETH', 'XMRETH', 'DLTETH',
+                 'AMBETH', 'BCCETH', 'BATETH', 'BCPTETH', 'ARNETH', 'GVTETH', 'CDTETH',
+                 'GXSETH', 'POEETH', 'QSPETH', 'BTSETH', 'XZCETH', 'LSKETH', 'TNTETH',
+                 'FUELETH', 'MANAETH', 'BCDETH', 'DGDETH', 'ADXETH', 'ADAETH', 'PPTETH',
+                 'CMTETH', 'XLMETH', 'CNDETH', 'LENDETH', 'WABIETH', 'LTCETH', 'TNBETH',
+                 'WAVESETH', 'GTOETH', 'ICXETH', 'OSTETH', 'ELFETH', 'AIONETH', 'NEBLETH',
+                 'BRDETH', 'EDOETH', 'WINGSETH', 'NAVETH', 'LUNETH', 'TRIGETH', 'APPCETH',
+                 'VIBEETH', 'RLCETH', 'INSETH', 'PIVXETH', 'IOSTETH']
+
+
