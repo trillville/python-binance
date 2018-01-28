@@ -7,7 +7,6 @@ from datetime import datetime
 from binance.client import Client
 from binance.helpers import date_to_milliseconds, interval_to_milliseconds
 
-
 def get_historical_klines(symbol, interval, start_str, end_str=None):
     """Get Historical Klines from Binance
 
