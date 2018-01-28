@@ -14,7 +14,7 @@ class BinanceIndicators:
         self.client = Client("", "")
         self.symbol = symbol
         self.limit = limit
-        self.timeframe = interval_to_milliseconds(Client.KLINE_INTERVAL_30MINUTE)
+        self.timeframe = interval_to_milliseconds(interval)
         self.start_ts = date_to_milliseconds(start_str)
         self.end_ts = None
         if end_str:
@@ -34,7 +34,7 @@ class BinanceIndicators:
             # fetch the klines from start_ts up to max 500 entries or the end_ts if set
             temp_data = self.client.get_klines(
                 symbol=self.symbol,
-                interval=Client.KLINE_INTERVAL_30MINUTE,
+                interval=Client.KLINE_INTERVAL_5MINUTE,
                 limit=self.limit,
                 startTime=start_time,
                 endTime=end_time
@@ -64,7 +64,7 @@ class BinanceIndicators:
             if idx % 3 == 0:
                 time.sleep(1)
 
-        return pd.DataFrame(output_data, columns=self.KLINE_HEADERS).convert_objects(convert_dates='coerce', convert_numeric=True)
+        return pd.DataFrame(output_data, columns=self.KLINE_HEADERS)
 
     def save_dataframe(self, df):
         with open(
@@ -78,12 +78,13 @@ class BinanceIndicators:
         ) as f:
             f.write(json.dumps(df))
 
+    def get_mavg(self, data, *windows):
+        for w in windows:
+            data['mavg_' + str(w)] = data['open'].rolling(w).mean()
+        return data[['open_time'] + ['mavg_' + str(w) for w in windows]]
 
-
-    def get_avg(self):
-        all_data = self.fetch_klines()
-        avg = all_data['open'].mean()
-        self.save_dataframe(avg)
+    def save_all_features(self, data):
+       data.to_csv('ayy.csv', sep=',', index=False)
 
 
 def make_parser():
@@ -97,14 +98,16 @@ def make_parser():
     parser.add_argument('-e', '--end', dest='end_str',
                         required=False, default='1 Jan, 2018')
     parser.add_argument('-i', '--interval', dest='interval',
-                        required=False, default='30m')
+                        required=False, default='5m')
 
     return parser
 
 def main(args):
 
     inds = BinanceIndicators(args.symbol, args.limit, args.interval, args.start_str, args.end_str)
-    inds.get_avg()
+    data = inds.fetch_klines()
+    mavs = inds.get_mavg(data, 10, 20)
+    inds.save_all_features(mavs)
 
 if __name__ == '__main__':
     parser = make_parser()
