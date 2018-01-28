@@ -68,16 +68,13 @@ class BinanceIndicators:
         return pd.DataFrame(output_data, columns=self.KLINE_HEADERS)
 
     def save_dataframe(self, df):
-        with open(
-            "/indicator_data/{}_{}_{}-{}.json".format(
-                self.symbol,
-                self.timeframe,
-                self.start_ts,
-                self.end_ts
-            ),
-            'w' # set file write mode
-        ) as f:
-            f.write(json.dumps(df))
+        with open(("{}{}_{}_{}-{}.json".format(
+                        indicator_dir,
+                        self.symbol,
+                        self.timeframe,
+                        self.start_ts,
+                        self.end_ts
+                ), 'w') as f: f.write(json.dumps(df))
 
     def get_emavg(self, data, *windows):
         for w in windows:
@@ -101,7 +98,7 @@ class BinanceIndicators:
 def make_parser():
     parser = ArgumentParser()
     parser.add_argument('-y', '--symbol', dest='symbol',
-                        required=False, default='ETHBTC')
+                        required=False, default='all')
     parser.add_argument('-l', '--limit', dest='limit',
                         required=False, default=500)
     parser.add_argument('-s', '--start', dest='start_str',
@@ -116,7 +113,7 @@ def make_parser():
 def main(args):
 
     inds = BinanceIndicators(args.symbol, args.limit, args.interval, args.start_str, args.end_str)
-    for symbol in ALL_ETH_PAIRS:
+    for symbol in ALL_ETH_PAIRS if args.symbol == 'all' else args.symbol:
         inds.symbol = symbol
         data = inds.fetch_klines()
         mavs = inds.get_emavg(data, 10, 50)
