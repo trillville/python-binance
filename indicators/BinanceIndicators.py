@@ -107,14 +107,14 @@ def make_parser():
     parser.add_argument('-e', '--end', dest='end_str',
                         required=False, default='1 Jan, 2018')
     parser.add_argument('-i', '--interval', dest='interval',
-                        required=False, default='30m')
+                        required=False, default='5m')
 
     return parser
 
 def main(args):
 
     inds = BinanceIndicators(args.symbol, args.limit, args.interval, args.start_str, args.end_str)
-    for symbol in ALL_ETH_PAIRS if args.symbol == 'all' else args.symbol:
+    for symbol in ALL_ETH_PAIRS if args.symbol == 'all' else [args.symbol]:
         inds.symbol = symbol
         data = inds.fetch_klines()
         mavs = inds.get_emavg(data, 10, 50)
