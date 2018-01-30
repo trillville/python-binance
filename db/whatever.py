@@ -17,14 +17,14 @@ db_wrapper.connection.commit()
 
 db_wrapper.connection.close()
 
-try:
-    with db:
-        db.execute('''INSERT INTO users(name, phone, email, password)
-                  VALUES(?,?,?,?)''', (name1,phone1, email1, password1))
-except sqlite3.IntegrityError:
-    print('Record already exists')
-finally:
-    db.close()
+# try:
+#     with db:
+#         db.execute('''INSERT INTO users(name, phone, email, password)
+#                   VALUES(?,?,?,?)''', (name1,phone1, email1, password1))
+# except sqlite3.IntegrityError:
+#     print('Record already exists')
+# finally:
+#     db.close()
 # import sqlite3
 
 # sqlite_file = 'binance_development.db'    # name of the sqlite database file

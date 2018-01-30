@@ -99,16 +99,15 @@ class BinanceIndicators:
                 ), sep=',', index=False)
 
     def write_to_database(self, raw_data, indicator_data):
+        database_wrapper = Wrapper()
         for index, indicators in indicator_data.iterrows():
             print(index, indicators)
             # cast unicode as numbers
             raw_data_in = [float(i) if type(i).__name__ == 'unicode' else i for i in raw_data.loc[index].values]
+            # data_to_output = [self.symbol] + raw_data_in + [ indicators['mavg_10'], indicators['mavg_50'] ]
+            data_to_output = [self.symbol] + raw_data_in
+            print(data_to_output)
             pdb.set_trace()
-            data_to_output = [self.symbol] + raw_data_in + [ indicators['mavg_10'], indicators['mavg_50'] ]
-            # print(data_to_output)
-        # pdb.set_trace()
-        database_wrapper = Wrapper()
-        # for raw_data in
 
 def make_parser():
     parser = ArgumentParser()

@@ -41,13 +41,16 @@ class Wrapper:
      """
      return (nameTbl in self.getTables())
 
-  def add_historical_records(table_name, records, foreign_keys=None):
-    for record in records:
-      # Insert a row of data
-      c.execute("INSERT INTO klines VALUES ('SAMPLE', 1512086400000, 0.04368400, 0.04375100, 0.04334200, 0.04366500, 2081.85600000, 1512088199999, 90.79655078, 3904, 976.19100000, 42.59074736)")
-
-      c.execute("select * from klines;")
-
-      print c.fetchone()
-
+  def add_record_to_klines(self,list):
     """
+    Takes a list to be added as a new record to the klines table.
+    """
+    cmd = "INSERT INTO klines VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)"
+    try:
+      self.cursor.execute(cmd,list)
+    except sqlite3.IntegrityError:
+        print('Record already exists')
+
+  def add_historical_records_to_klines(self, records):
+    for record in records:
+      self.add_record_to_klines(record)
