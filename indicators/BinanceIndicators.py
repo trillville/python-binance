@@ -107,7 +107,7 @@ class BinanceIndicators:
             data_to_output = [self.symbol] + raw_data_in + [ indicators['mavg_10'], indicators['mavg_50'] ]
             # print(data_to_output)
         # pdb.set_trace()
-        # database_wrapper = new Wrapper()
+        database_wrapper = Wrapper()
         # for raw_data in
 
 def make_parser():
