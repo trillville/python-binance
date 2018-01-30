@@ -9,7 +9,7 @@ from binance.client import Client
 from binance.helpers import date_to_milliseconds, interval_to_milliseconds
 from binance.trading_constants import ALL_ETH_PAIRS
 
-from db import Wrapper
+from db.Wrapper import Wrapper
 import pdb
 
 class BinanceIndicators:

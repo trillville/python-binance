@@ -1,10 +1,9 @@
 import sqlite3
 
 class Wrapper:
-
-  def __init__():
+  def __init__(self):
     self.connection = sqlite3.connect('binance_development.db')
-    self.cursor = connection.cursor()
+    self.cursor = self.connection.cursor()
 
   def save():
     self.connection.commit()
