@@ -9,6 +9,9 @@ from binance.client import Client
 from binance.helpers import date_to_milliseconds, interval_to_milliseconds
 from binance.trading_constants import ALL_ETH_PAIRS
 
+from db import Wrapper
+import pdb
+
 class BinanceIndicators:
     def __init__(self, symbol, limit, interval, start_str, end_str):
         self.client = Client("", "")
@@ -74,7 +77,7 @@ class BinanceIndicators:
                         self.timeframe,
                         self.start_ts,
                         self.end_ts
-            ), 'w') as f: 
+            ), 'w') as f:
             f.write(json.dumps(df))
 
     def get_emavg(self, data, *windows):
@@ -86,7 +89,7 @@ class BinanceIndicators:
        current_directory = os.getcwd()
        indicator_dir = current_directory.rstrip('/') + '/indicator_data/'
        if not os.path.exists(indicator_dir):
-           os.makedirs(indicator_dir) 
+           os.makedirs(indicator_dir)
        data.to_csv("{}{}_{}_{}-{}.csv".format(
                         indicator_dir,
                         self.symbol,
@@ -95,6 +98,17 @@ class BinanceIndicators:
                         self.end_ts
                 ), sep=',', index=False)
 
+    def write_to_database(self, raw_data, indicator_data):
+        for index, indicators in indicator_data.iterrows():
+            print(index, indicators)
+            # cast unicode as numbers
+            raw_data_in = [float(i) if type(i).__name__ == 'unicode' else i for i in raw_data.loc[index].values]
+            pdb.set_trace()
+            data_to_output = [self.symbol] + raw_data_in + [ indicators['mavg_10'], indicators['mavg_50'] ]
+            # print(data_to_output)
+        # pdb.set_trace()
+        # database_wrapper = new Wrapper()
+        # for raw_data in
 
 def make_parser():
     parser = ArgumentParser()
@@ -108,7 +122,6 @@ def make_parser():
                         required=False, default='1 Jan, 2018')
     parser.add_argument('-i', '--interval', dest='interval',
                         required=False, default='30m')
-
     return parser
 
 def main(args):
@@ -116,9 +129,14 @@ def main(args):
     inds = BinanceIndicators(args.symbol, args.limit, args.interval, args.start_str, args.end_str)
     for symbol in ALL_ETH_PAIRS if args.symbol == 'all' else args.symbol:
         inds.symbol = symbol
+        print("Fetching Klines...")
         data = inds.fetch_klines()
+        print("Fetched.\nCalculating Moving Averages...")
         mavs = inds.get_emavg(data, 10, 50)
-        inds.save_all_features(mavs)
+        print("Saving...")
+        # inds.save_all_features(mavs)
+        inds.write_to_database(data,mavs)
+        print("Saved.")
 
 if __name__ == '__main__':
     parser = make_parser()
