@@ -107,7 +107,13 @@ class BinanceIndicators:
             # data_to_output = [self.symbol] + raw_data_in + [ indicators['mavg_10'], indicators['mavg_50'] ]
             data_to_output = [self.symbol] + raw_data_in
             print(data_to_output)
-            pdb.set_trace()
+            try:
+                database_wrapper.add_record_to_klines(data_to_output)
+            except sqlite3.IntegrityError:
+                print('Record already exists')
+            # pdb.set_trace()
+        database_wrapper.save()
+        database_wrapper.close()
 
 def make_parser():
     parser = ArgumentParser()

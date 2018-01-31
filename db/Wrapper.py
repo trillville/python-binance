@@ -20,10 +20,10 @@ class Wrapper:
       self.cursor.execute(sql_create_table)
       self.connection.commit()
 
-  def save():
+  def save(self):
     self.connection.commit()
 
-  def close():
+  def close(self):
     self.connection.close()
 
   def getTables(self):
