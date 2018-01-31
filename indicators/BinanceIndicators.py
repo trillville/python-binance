@@ -80,7 +80,8 @@ class BinanceIndicators:
     def get_emavg(self, data, *windows):
         for w in windows:
             data['mavg_' + str(w)] = data['open'].ewm(span=w).mean()
-        return data[['open_time'] + ['mavg_' + str(w) for w in windows]]
+        return data
+        #return data[['open_time'] + ['mavg_' + str(w) for w in windows]]
 
     def save_all_features(self, data):
        current_directory = os.getcwd()
