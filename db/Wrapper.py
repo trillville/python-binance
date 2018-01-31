@@ -1,8 +1,11 @@
 import sqlite3
+import os
 
 class Wrapper:
   def __init__(self):
-    self.connection = sqlite3.connect('./binance_development.db')
+    current_directory = os.getcwd()
+    database_path = current_directory.rstrip('/') + '/db/binance_development.db'
+    self.connection = sqlite3.connect(database_path)
     self.cursor = self.connection.cursor()
 
     """
